@@ -19,6 +19,7 @@
     "webpack": "^1.12.2"
   },
   "devDependencies": {
+    "gulp-sass": "^2.1.0",
     "gulp-util": "^3.0.7",
     "lodash": "^3.10.1",
     "lodash.assign": "^3.2.0",
