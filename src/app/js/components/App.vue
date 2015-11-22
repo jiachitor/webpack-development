@@ -5,7 +5,7 @@
       <a id="yc" href="http://www.ycombinator.com">
         <img src="https://news.ycombinator.com/y18.gif">
       </a>
-      <h1><a href="#/">Hacker News4355</a></h1>
+      <h1><a href="#/">Hacker News435565656</a></h1>
       <span class="source">
         Built with <a href="http://vuejs.org" target="_blank">Vue.js</a> |
         <a href="https://github.com/yyx990803/vue-hackernews" target="_blank">Source</a>

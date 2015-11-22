@@ -7,6 +7,11 @@
 npm install
 ```
 
+#init
+```
+npm install app   // 生产 app 项目的 webpack.config.js 和 server.js 文件
+```
+
 # watch:
 ```
 npm run dev

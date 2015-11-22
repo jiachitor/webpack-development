@@ -31,7 +31,7 @@ if (argv[0] === '--production') {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin(path.resolve(__dirname, "build", "app", "static", "app.css"), {
+    new ExtractTextPlugin(path.resolve(__dirname, "build", config_appName, "static", "app.css"), {
       allChunks: true
     })
   ]
@@ -47,7 +47,7 @@ var compiler = webpack(webpackConfig);
 var server = new webpackDevServer(compiler, {
   host: config.host,
   port: config.port,
-  contentBase: "build/" + "app", //指定访问目录
+  contentBase: "build/" + config_appName, //指定访问目录
   hot: true,
   inline: true,
   quiet: false,

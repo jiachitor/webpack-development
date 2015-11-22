@@ -7,11 +7,11 @@ var vue = require('vue-loader'),
 module.exports = {
   entry: {
     app: [
-      path.resolve(__dirname, "src", "app", "js", "main.js")
+      path.resolve(__dirname, "src", config_appName, "js", "main.js")
     ]
   },
   output: {
-    path: path.resolve(__dirname, "build", "app", "static"),
+    path: path.resolve(__dirname, "build", config_appName, "static"),
     filename: 'bundle.js'
   },
   plugins: [
