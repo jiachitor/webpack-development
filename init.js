@@ -16,59 +16,29 @@ for (var file of files) {
   }
 }
 
-// 创造新的 'webpack.config.js' 文件
-function initWebpackConfig(appName) {
+// 创造新的 'js' 文件
+function init(appName,src_file,to_file) {
   return new Promise(
     // The resolver function is called with the ability to resolve or
     // reject the promise
     function(resolve, reject) {
 
-      var readStream_conf = fs.createReadStream(path.join(__dirname, 'webpack', 'webpack.config.init.js'))
+      var readStream = fs.createReadStream(path.join(__dirname, 'webpack', src_file))
         .pipe(replaceStream('config_appName', '"' + appName + '"'));
-      var writeStream_conf = fs.createWriteStream(path.join(__dirname, 'webpack.config.js'));
+      var writeStream = fs.createWriteStream(path.join(__dirname, to_file));
 
-      readStream_conf.on('data', function(chunk) { // 当有数据流出时，写入数据
-        if (writeStream_conf.write(chunk) === false) { // 如果没有写完，暂停读取流
-          readStream_conf.pause();
+      readStream.on('data', function(chunk) { // 当有数据流出时，写入数据
+        if (writeStream.write(chunk) === false) { // 如果没有写完，暂停读取流
+          readStream.pause();
         }
       });
 
-      writeStream_conf.on('drain', function() { // 写完后，继续读取
-        readStream_conf.resume();
+      writeStream.on('drain', function() { // 写完后，继续读取
+        readStream.resume();
       });
 
-      readStream_conf.on('end', function() { // 当没有数据时，关闭数据流
-        writeStream_conf.end();
-        resolve(true);
-      });
-
-    });
-};
-
-
-// 创造新的 'server.js' 文件
-function initServer(appName) {
-  return new Promise(
-    // The resolver function is called with the ability to resolve or
-    // reject the promise
-    function(resolve, reject) {
-
-      var readStream_server = fs.createReadStream(path.join(__dirname, 'webpack', 'webpack.server.init.js'))
-        .pipe(replaceStream('config_appName', '"' + appName + '"'));
-      var writeStream_server = fs.createWriteStream(path.join(__dirname, 'server.js'));
-
-      readStream_server.on('data', function(chunk) { // 当有数据流出时，写入数据
-        if (writeStream_server.write(chunk) === false) { // 如果没有写完，暂停读取流
-          readStream_server.pause();
-        }
-      });
-
-      writeStream_server.on('drain', function() { // 写完后，继续读取
-        readStream_server.resume();
-      });
-
-      readStream_server.on('end', function() { // 当没有数据时，关闭数据流
-        writeStream_server.end();
+      readStream.on('end', function() { // 当没有数据时，关闭数据流
+        writeStream.end();
         resolve(true);
       });
 
@@ -77,8 +47,8 @@ function initServer(appName) {
 
 co(function *(){
   // resolve multiple promises in parallel
-  var a = yield initWebpackConfig(argv[0]);
-  var b = yield initServer(argv[0]);
+  var a = yield init(argv[0],'webpack.config.init.js','webpack.config.js');
+  var b = yield init(argv[0],'webpack.server.init.js','server.js');
   var res = yield [a, b];
   console.log(res);
   // => [1, 2]
