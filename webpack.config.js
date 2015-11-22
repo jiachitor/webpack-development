@@ -16,6 +16,9 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new ExtractTextPlugin("app.css", {
+      allChunks: true
+    })
   ],
   module: {
     loaders: [{
@@ -23,13 +26,17 @@ module.exports = {
       loader: 'vue'
     }, {
       test: /\.js$/,
-      // excluding some local linked packages.
-      // for normal use cases only node_modules is needed.
       exclude: /node_modules|vue\/src|vue-router\/|vue-loader\/|vue-hot-reload-api\//,
       loader: 'babel'
     }, {
+      test: /\.css$/,
+      loaders: ["style", "css"]
+    }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('css!sass')
+      loaders: ["style", "css", "sass"]
+    }, {
+      test: /\.scss$/,
+      loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader")
     }]
   },
   babel: {
