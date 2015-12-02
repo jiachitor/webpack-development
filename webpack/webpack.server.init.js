@@ -1,4 +1,5 @@
 var path = require('path'),
+  open = require('open'),
   webpack = require('webpack'),
   webpackDevServer = require('webpack-dev-server'),
   ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -30,10 +31,7 @@ if (argv[0] === '--production') {
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin(path.resolve(__dirname, "build", config_appName, "static", "app.css"), {
-      allChunks: true
-    })
+    new webpack.HotModuleReplacementPlugin()
   ]
 } else {
   // 开发环境下
@@ -47,7 +45,7 @@ var compiler = webpack(webpackConfig);
 var server = new webpackDevServer(compiler, {
   host: config.host,
   port: config.port,
-  contentBase: "build/" + config_appName, //指定访问目录
+  contentBase: "src/" + config_appName, //指定访问目录
   hot: true,
   inline: true,
   quiet: false,
@@ -65,4 +63,5 @@ var server = new webpackDevServer(compiler, {
 });
 server.listen(config.port, config._host_, function() {
   console.log(config.host + ":" + config.port + "/");
+  open(config.host + ":" + config.port + "/" + config_appName + "/");
 });

@@ -11,12 +11,12 @@ module.exports = {
     ]
   },
   output: {
-    path: path.resolve(__dirname, "build", config_appName, "static"),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, "src", config_appName, "static"),
+    filename: 'app.bundle.js'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin("app.css", {
+    new ExtractTextPlugin("app.bundle.css", {
       allChunks: true
     })
   ],
@@ -30,14 +30,14 @@ module.exports = {
       loader: 'babel'
     }, {
       test: /\.css$/,
-      loaders: ["style", "css"]
-    }, {
-      test: /\.scss$/,
       loaders: ["style", "css", "sass"]
     }, {
       test: /\.scss$/,
+      loaders: ["style", "css", "sass"]
+    }, /*{
+      test: /\.scss$/,
       loader: ExtractTextPlugin.extract("style-loader", "css-loader", "sass-loader")
-    }]
+    }*/]
   },
   babel: {
     presets: ['es2015'],
