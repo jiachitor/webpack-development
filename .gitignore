@@ -3,3 +3,5 @@ node_modules
 src/*
 !src/app
 build/
+server.js
+webpack.config.js
