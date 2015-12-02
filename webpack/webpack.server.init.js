@@ -61,6 +61,7 @@ var server = new webpackDevServer(compiler, {
     colors: true
   },
 });
+
 server.listen(config.port, config._host_, function() {
   console.log(config.host + ":" + config.port + "/");
   open(config.host + ":" + config.port + "/" + config_appName + "/");

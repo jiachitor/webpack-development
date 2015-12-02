@@ -5,19 +5,28 @@ var fs = require('fs'),
 
 var argv = process.argv.slice(2);
 
-var files = ["app"];
+var files = ["app", "test"],
+  filesArr = [];
+
+if (argv.length === 0) {
+  console.log("Without this project!")
+  return;
+}
 
 for (var file of files) {
   if (file == argv[0]) {
     console.log("init the project of " + argv[0] + "!")
-  } else {
-    console.log("Without this project!")
-    return;
+    filesArr.push(file);
   }
 }
 
+if (filesArr.length === 0) {
+  console.log("Without this project!")
+  return;
+}
+
 // 创造新的 'js' 文件
-function init(appName,src_file,to_file) {
+function init(appName, src_file, to_file) {
   return new Promise(
     // The resolver function is called with the ability to resolve or
     // reject the promise
@@ -45,22 +54,22 @@ function init(appName,src_file,to_file) {
     });
 };
 
-co(function *(){
+co(function*() {
   // resolve multiple promises in parallel
-  var a = yield init(argv[0],'webpack.config.init.js','webpack.config.js');
-  var b = yield init(argv[0],'webpack.server.init.js','server.js');
+  var a = yield init(argv[0], 'webpack.config.init.js', 'webpack.config.js');
+  var b = yield init(argv[0], 'webpack.server.init.js', 'server.js');
   var res = yield [a, b];
   console.log(res);
   // => [1, 2]
 }).catch(onerror);
 
 // errors can be try/catched
-co(function *(){
+co(function*() {
   try {
     yield Promise.reject(new Error('boom'));
   } catch (err) {
     console.error(err.message); // "boom"
- }
+  }
 }).catch(onerror);
 
 function onerror(err) {

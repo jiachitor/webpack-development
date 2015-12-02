@@ -7,7 +7,7 @@ var vue = require('vue-loader'),
 module.exports = {
   entry: {
     app: [
-      path.resolve(__dirname, "src", config_appName, "js", "main.js")
+      path.resolve(__dirname, "src", config_appName, "js", "app.js")
     ]
   },
   output: {
@@ -20,6 +20,11 @@ module.exports = {
       allChunks: true
     })
   ],
+  resolve: {
+    alias: {
+      "_sass": path.join(__dirname, "src", config_appName, "sass")
+    }
+  },
   module: {
     loaders: [{
       test: /\.vue$/,
