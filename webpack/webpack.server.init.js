@@ -1,4 +1,5 @@
 var path = require('path'),
+  os = require('os'),
   open = require('open'),
   webpack = require('webpack'),
   webpackDevServer = require('webpack-dev-server'),
@@ -8,10 +9,23 @@ var argv = process.argv.slice(2);
 
 var webpackConfig = require('./webpack.config.js');
 
+function getLocalIP() {
+    const map = [];
+    const ifaces = os.networkInterfaces();
+    for (const dev in ifaces) {
+        if (dev.indexOf('本地连接') != -1 || dev.indexOf('无线网络连接') != -1 ) {
+            return ifaces[dev][1].address;
+        }
+    }  
+    return map;
+}
+
+var IPV4 = getLocalIP();
+
 var config = {
-  host: 'http://localhost',
+  host: 'http://' + IPV4,
   port: 8080,
-  _host_: 'localhost',
+  _host_: IPV4,
 };
 
 if (argv[0] === '--production') {
@@ -64,5 +78,5 @@ var server = new webpackDevServer(compiler, {
 
 server.listen(config.port, config._host_, function() {
   console.log(config.host + ":" + config.port + "/");
-  open(config.host + ":" + config.port + "/" + config_appName + "/");
+  open(config.host + ":" + config.port + "/" + config_appName + "/index.html");
 });
