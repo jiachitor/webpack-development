@@ -6,7 +6,7 @@ var fs = require('fs'),
 var argv = process.argv.slice(2);
 
 if (argv.length === 0) {
-  console.log("Without this project!")
+  console.log('Usage: node init [filename] ');
   return;
 }
 
