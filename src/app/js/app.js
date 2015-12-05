@@ -6,7 +6,7 @@ import NewsView from './components/NewsView.vue'
 import ItemView from './components/ItemView.vue'
 import UserView from './components/UserView.vue'
 
-import '../sass/main.scss'
+import '../sass/app.scss'
 
 // install router
 Vue.use(Router)
