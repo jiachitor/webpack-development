@@ -32,6 +32,8 @@ module.exports = {
         // allow debugger during development
         'no-debugger': process.env.NODE_ENV === 'production'
             ? 2
-            : 0
+            : 0,
+        // 关闭语句强制分号结尾
+        "semi": [0]
     }
 }

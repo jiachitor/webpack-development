@@ -1,0 +1,33 @@
+@import "~@static/sass/normalize.scss";
+
+body{
+    font-size: 40px;
+    background: #ff6600;
+    color: #ffffff;
+}
+
+@font-face { 
+    font-family: Lovelo-Black;
+    src: url('~@static/fonts/element-icons.ttf');
+}
+
+.content-div{
+    color: #ffffff;
+    font-size: 20px;
+}
+
+/* 下面用于css的treeShaking是不是管用*/ 
+.useless{
+    background-color: #000000;
+    color: #ff0000;
+}
+
+/* 下面用于css的路径转换是不是管用*/ 
+.test-image{
+    background-image: url('~@static/images/webpack.png');
+    background-repeat: no-repeat;
+    background-size: 300px;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}

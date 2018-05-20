@@ -1,6 +1,5 @@
 import _ from 'lodash'
-import '@/less/test.less'
-import '@/sass/test.scss'
+// import '@/sass/test.scss'
 
 function component () {
     var element = document.createElement('div')

@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Getting Started</title>
+</head>
+
+<body>
+	<div class="content-div">Hello World 1</div>
+    <div class="test-image"></div>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <% if(process.env.NODE_ENV === 'development') {%>    
+    <script src="<%= htmlWebpackPlugin.options.vendor %>"></script>
+    <% } %>
+</body>
+
+</html>

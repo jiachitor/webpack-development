@@ -1,15 +1,30 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+
+// 清空打包目录的插件
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+// 复制静态资源的插件
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+// // 生成html的插件
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-const common = require('./webpack.common.js');
+const glob = require('glob')
+const PurifyCSSPlugin = require('purifycss-webpack')
+const WebpackParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+
+const base = require('./webpack.base.js');
 const config = require('./config.js')
+
+function resolve(dir) {
+    return path.join(__dirname, '..', dir)
+}
 
 function assetsPath(_path) {
     var assetsSubDirectory = process.env.NODE_ENV === 'production'
@@ -18,66 +33,83 @@ function assetsPath(_path) {
     return path.posix.join(assetsSubDirectory, _path)
 }
 
-function resolve(dir) {
-    return path.join(__dirname, '..', dir)
-}
+var htmls = glob.sync('./src/*.html').map(function (item) {
+    return new HtmlWebpackPlugin({
+        template: item,
+        filename: './' + item.slice(6),
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: true
+        },
+        chunks:[item.slice(6, -5), 'common'],
+        hash:true,//防止缓存
+    });
+});
 
-module.exports = merge(common, {
-    devtool: '#source-map',
+module.exports = merge(base, {
+    mode: 'production',
     output: {
         filename: assetsPath('js/[name].[chunkhash].js'),
         path: config.build.assetsRoot
     },
-    plugins: [
-        new CleanWebpackPlugin(['../dist']),
-        new UglifyJSPlugin({sourceMap: true}),
+    module: {
+        rules: []
+    },
+    plugins: htmls.concat([
+
+        // 定义 JS中常量
         new webpack.DefinePlugin({
-            'process.env': {
-                'NODE_ENV': JSON.stringify('production')
-            }
+            'process.env.NODE_ENV': config.dev.env,
+            'process.env.webSocket': '"192.168.0.193"',
+            '$STATIC$': JSON.stringify("http://dev.example.com")
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            sourceMap: true
+        
+        new CleanWebpackPlugin(['dist'], {
+            root: path.join(__dirname, '..'),
+            verbose: true,
+            dry:  false
         }),
-        new ExtractTextPlugin({filename: assetsPath('css/app.[contenthash].css')}),
+
+        // 复制资源
+        // new CopyWebpackPlugin([
+        //     {
+        //         from: path.resolve(__dirname, '../src/static'),
+        //         to: config.build.assetsSubDirectory,
+        //         ignore: ['.*']
+        //     }
+        // ]),
+
+        // 提取css
+        new MiniCssExtractPlugin({
+            filename: assetsPath('css/[name].[contenthash].css'),
+            chunkFilename: "[id].css"
+        }),
+
         new OptimizeCSSPlugin({
             cssProcessorOptions: {
                 safe: true
             }
         }),
-        new HtmlWebpackPlugin({
-            filename: process.env.NODE_ENV === 'testing'
-                ? 'index.html'
-                : config.build.index,
-            template: 'index.html',
-            inject: true,
-            minify: {
-                removeComments: true,
-                collapseWhitespace: true,
-                removeAttributeQuotes: true
-                // more options:
-                // https://github.com/kangax/html-minifier#options-quick-reference
-            },
-            // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-            chunksSortMode: 'dependency'
+
+        new PurifyCSSPlugin({
+            paths: glob.sync(path.join(__dirname, '../src/*.html'))
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function(module, count) {
-                // any required modules inside node_modules are extracted to vendor
-                return (module.resource && /\.js$/.test(module.resource) && module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0)
+
+        new WebpackParallelUglifyPlugin({
+            uglifyJS: {
+                output: {
+                    beautify: false, //不需要格式化
+                    comments: false //不保留注释
+                },
+                compress: {
+                    warnings: false, // 在UglifyJs删除没有用到的代码时不输出警告
+                    drop_console: true, // 删除所有的 `console` 语句，可以兼容ie浏览器
+                    collapse_vars: true, // 内嵌定义了但是只用到一次的变量
+                    reduce_vars: true // 提取出出现多次但是没有定义成变量去引用的静态值
+                }
             }
         }),
-        new webpack.optimize.CommonsChunkPlugin({name: 'manifest', chunks: ['vendor']}),
-        new CopyWebpackPlugin([
-            {
-                from: path.resolve(__dirname, '../static'),
-                to: config.build.assetsSubDirectory,
-                ignore: ['.*']
-            }
-        ])
-    ]
+        
+    ])
 });
