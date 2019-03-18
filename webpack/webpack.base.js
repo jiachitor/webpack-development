@@ -97,13 +97,13 @@ module.exports = {
             '@script': resolve('src/script'),
             '@static': resolve('src/static')
         },
-        // 省略后缀, 
+        // 省略后缀,
         extensions: ['.js', '.json', 'jsm', '.css', '.less', '.scss', '.sass', '.jsx', '.vue']
     },
     // 模块，在Webpack里一切皆模块，Webpack会从配置的Entry开始递归找出所有依赖的模块，最常用的是rules配置项，功能是匹配对应的后缀，从而针对代码文件完成格式转换和压缩合并等指定的操作
     module: {
         rules: [{
-                test: /\.(js|vue)$/,
+                test: /\.(js)$/,
                 loader: 'eslint-loader', // 模块转换器，用于把模块原内容按照需求转换成新内容，这个是配合Module模块中的rules中的配置项来使用
                 enforce: 'pre',
                 include: [
@@ -148,13 +148,13 @@ module.exports = {
                 use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
                 include: [resolve('src')],
                 exclude: /node_modules/
-            }, 
+            },
             // {
             //     test: /\.scss$/,
             //     use: ['css-hot-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
             //     include: [resolve('src')],
             //     exclude: /node_modules/
-            // }, 
+            // },
             { //file-loader 解决css等文件中引入图片路径的问题
                 // url-loader 当图片较小的时候会把图片BASE64编码，大于limit参数的时候还是使用file-loader 进行拷贝
                 test: /\.(png|jpg|jpeg|gif|svg)/,
